@@ -1,0 +1,38 @@
+// memoization  Tc - O(n)  Sc - O(n)
+
+#include<bits/stdc++.h>
+int go(int i,vector<int>&nums,vector<int>&dp){
+    if(i<0)return 0;
+    if(dp[i]!=-1){
+        return dp[i];
+    }
+    int take=nums[i]+go(i-2,nums,dp);
+    int notake=go(i-1,nums,dp);
+    return dp[i]=max(take,notake);
+}
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    int n=nums.size();
+    vector<int>dp(n+1,-1);
+    return go(n-1,nums,dp);
+}
+
+
+// Space optimization Tc - O(n)  Sc - O(1)
+
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    int n=nums.size(),i;
+    int prev=nums[0],prev2=0;
+    for(i=1;i<n;i++){
+        int take=nums[i];
+        if(i>1) take+=prev2;
+        int notake=prev;
+        
+        int current=max(take,notake);
+        
+        prev2=prev;
+        prev=current;
+    }
+    return prev;
+}
