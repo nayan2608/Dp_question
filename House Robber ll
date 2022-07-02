@@ -1,0 +1,21 @@
+long long int maximumNonAdjacentSum(int i,int n,vector<int> &nums){
+    
+    long long int prev=nums[i],prev2=0;
+    
+    for(i=i+1;i<n;i++){
+        long long int take=nums[i];
+        if(i>1) take+=prev2;
+        long long int notake=prev;
+        
+        long long int current=max(take,notake);
+        
+        prev2=prev;
+        prev=current;
+    }
+    return prev;
+}
+long long int houseRobber(vector<int>& valueInHouse)
+{
+    int n=valueInHouse.size();
+    return max(maximumNonAdjacentSum(1,n,valueInHouse),maximumNonAdjacentSum(0,n-1,valueInHouse));
+}
