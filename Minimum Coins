@@ -1,0 +1,101 @@
+// memoization Tc - (
+
+int go(int i,int x,vector<int>&num,vector<vector<int>>&dp){
+    if(i==0){
+        if(x%num[0]==0)return x/num[0];
+        else return 1e9;
+    }
+    if(dp[i][x]!=-1){
+        return dp[i][x];
+    }
+    int nottake=go(i-1,x,num,dp);
+    int take=INT_MAX;
+    if(num[i]<=x){
+        take=1+go(i,x-num[i],num,dp);
+    }
+    return dp[i][x]=min(take,nottake);
+}
+int minimumElements(vector<int> &num, int x)
+{
+    int n=num.size();
+    vector<vector<int>>dp(n,vector<int>(x+1,-1));
+    int ans=go(n-1,x,num,dp);
+    if(ans>=1e9){
+        return -1;
+    }
+    else{
+        return ans;
+    }
+}
+
+// Tabulation
+
+int minimumElements(vector<int> &num, int x)
+{
+    int n=num.size();
+    vector<vector<int>>dp(n,vector<int>(x+1,0));
+    
+    for(int t=0;t<=x;t++){
+        if(t%num[0]==0){
+            dp[0][t]=t/num[0];
+        }
+        else{
+            dp[0][t]=1e9;
+        }
+    }
+    
+    for(int i=1;i<n;i++){
+        for(int t=0;t<=x;t++){
+             int nottake=dp[i-1][t];
+             int take=INT_MAX;
+             if(num[i]<=t){
+                    take=1+dp[i][t-num[i]];
+             }
+             dp[i][t]=min(take,nottake);
+        }
+    }
+    int ans=dp[n-1][x];
+    if(ans>=1e9){
+        return -1;
+    }
+    else{
+        return ans;
+    }
+}
+
+
+// Space optimazation
+
+int minimumElements(vector<int> &num, int x)
+{
+    int n=num.size();
+    vector<int>prev(x+1,0),curr(x+1,0);
+    
+    for(int t=0;t<=x;t++){
+        if(t%num[0]==0){
+            prev[t]=t/num[0];
+        }
+        else{
+            prev[t]=1e9;
+        }
+    }
+    
+    for(int i=1;i<n;i++){
+        for(int t=0;t<=x;t++){
+             int nottake=prev[t];
+             int take=INT_MAX;
+             if(num[i]<=t){
+                    take=1+curr[t-num[i]];
+             }
+             curr[t]=min(take,nottake);
+        }
+        prev=curr;
+    }
+    int ans=prev[x];
+    if(ans>=1e9){
+        return -1;
+    }
+    else{
+        return ans;
+    }
+}
