@@ -1,0 +1,39 @@
+// memoization  Tc - O(n*m)  Sc - O(n*m)
+
+#include<bits/stdc++.h>
+bool go(int i,int j,string p,string t,vector<vector<int>>&dp){
+    if(i<0 && j<0)return true;
+    if(i<0) return false;
+    if(j<0){
+        while(i>=0){
+            if(p[i]!='*'){
+                return false;
+            }
+            i--;
+        }
+        return true;
+    }
+    if(dp[i][j]!=-1){
+        return dp[i][j];
+    }
+    if(p[i]=='*'){
+        return dp[i][j]=(go(i-1,j,p,t,dp) || go(i,j-1,p,t,dp));
+    }
+    else if(p[i]==t[j] || p[i]=='?'){
+        return dp[i][j]=go(i-1,j-1,p,t,dp);
+    }
+    else{
+        return dp[i][j]=false;
+    }
+}
+bool wildcardMatching(string pattern, string text)
+{
+     int m=pattern.length();
+     int n=text.length();
+     vector<vector<int>>dp(m,vector<int>(n,-1));
+     return go(m-1,n-1,pattern,text,dp);
+}
+
+// Tabulation 
+
+
